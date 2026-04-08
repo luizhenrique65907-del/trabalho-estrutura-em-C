@@ -1,0 +1,145 @@
+— 2 - DESAFIOS COM PILHAS
+
+EXERCÍCIO 1
+#include <stdio.h>
+#include <stdlib.h>
+
+// nó da pilha
+struct No {
+    char dado;
+    struct No *prox;
+};
+
+// empilha um caractere
+void push(struct No **topo, char c) {
+    struct No *novo = malloc(sizeof(struct No));
+    novo->dado = c;
+    novo->prox = *topo;
+    *topo = novo;
+}
+
+// remove do topo da pilha
+char pop(struct No **topo) {
+    if (*topo == NULL) return '\0';
+
+    struct No *temp = *topo;
+    char c = temp->dado;
+    *topo = temp->prox;
+    free(temp);
+
+    return c;
+}
+
+// verifica se pilha está vazia
+int isEmpty(struct No *topo) {
+    return topo == NULL;
+}
+
+// verifica se os símbolos combinam
+int combina(char a, char b) {
+    return (a=='(' && b==')') ||
+           (a=='{' && b=='}') ||
+           (a=='[' && b==']');
+}
+
+int main() {
+    char exp[100];
+    struct No *pilha = NULL;
+
+    // lê a expressão
+    scanf("%s", exp);
+
+    // percorre a string
+    for (int i = 0; exp[i] != '\0'; i++) {
+        char c = exp[i];
+
+        // se for abertura, empilha
+        if (c=='(' || c=='{' || c=='[') {
+            push(&pilha, c);
+        }
+        // se for fechamento, verifica
+        else if (c==')' || c=='}' || c==']') {
+
+            // pilha vazia -> inválido
+            if (isEmpty(pilha)) {
+                printf("Invalida\n");
+                return 0;
+            }
+
+            // pega topo da pilha
+            char topo = pop(&pilha);
+
+            // verifica se combina
+            if (!combina(topo, c)) {
+                printf("Invalida\n");
+                return 0;
+            }
+        }
+    }
+
+    // se sobrou algo na pilha é inválido
+    if (isEmpty(pilha))
+        printf("Valida\n");
+    else
+        printf("Invalida\n");
+
+    return 0;
+}
+
+———————————————-
+
+EXERCÍCIO 2
+#include <stdio.h>
+#include <stdlib.h>
+
+// nó da pilha
+struct No {
+    char dado;
+    struct No *prox;
+};
+
+// empilha caractere
+void push(struct No **topo, char c) {
+    struct No *novo = malloc(sizeof(struct No));
+    if (novo == NULL) return;
+
+    novo->dado = c;
+    novo->prox = *topo;
+    *topo = novo;
+}
+
+// desempilha
+char pop(struct No **topo) {
+    if (*topo == NULL) return '\0';
+
+    struct No *temp = *topo;
+    char c = temp->dado;
+
+    *topo = temp->prox;
+    free(temp);
+
+    return c;
+}
+
+// verifica se vazia
+int isEmpty(struct No *topo) {
+    return topo == NULL;
+}
+
+int main() {
+    char str[100];
+    struct No *pilha = NULL;
+
+    scanf(" %[^\n]", str);
+
+    for (int i = 0; str[i] != '\0'; i++) {
+        push(&pilha, str[i]);
+    }
+
+    while (!isEmpty(pilha)) {
+        printf("%c", pop(&pilha));
+    }
+
+    printf("\n");
+    return 0;
+}
