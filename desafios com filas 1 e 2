@@ -1,0 +1,182 @@
+— 3 - DESAFIOS COM FILAS DINÂMICAS 
+
+EXERCÍCIO 1
+#include <stdio.h>
+#include <stdlib.h>
+
+// cliente da fila
+struct Cliente {
+    int id;
+    int tempoAtendimento;
+};
+
+// nó da fila
+struct No {
+    struct Cliente c;
+    struct No *prox;
+};
+
+// estrutura da fila
+struct Fila {
+    struct No *inicio;
+    struct No *fim;
+};
+
+// adiciona na fila
+void enqueue(struct Fila *f, struct Cliente c) {
+    struct No *novo = malloc(sizeof(struct No));
+    novo->c = c;
+    novo->prox = NULL;
+
+    if (f->fim == NULL) {
+        f->inicio = novo;
+        f->fim = novo;
+    } else {
+        f->fim->prox = novo;
+        f->fim = novo;
+    }
+}
+
+// remove da fila
+struct Cliente dequeue(struct Fila *f) {
+    struct Cliente c = {0,0};
+
+    if (f->inicio == NULL) return c;
+
+    struct No *temp = f->inicio;
+    c = temp->c;
+
+    f->inicio = temp->prox;
+    if (f->inicio == NULL)
+        f->fim = NULL;
+
+    free(temp);
+    return c;
+}
+
+// verifica vazia
+int isEmpty(struct Fila *f) {
+    return f->inicio == NULL;
+}
+
+int main() {
+    struct Fila fila;
+    fila.inicio = NULL;
+    fila.fim = NULL;
+
+    int n;
+    scanf("%d", &n);
+
+    // lê clientes
+    for (int i = 0; i < n; i++) {
+        struct Cliente c;
+        scanf("%d %d", &c.id, &c.tempoAtendimento);
+        enqueue(&fila, c);
+    }
+
+    int tempoEspera = 0;
+
+    // simula atendimento
+    while (!isEmpty(&fila)) {
+        struct Cliente c = dequeue(&fila);
+
+        printf("Cliente %d - Espera: %d min\n", c.id, tempoEspera);
+
+        tempoEspera += c.tempoAtendimento;
+    }
+
+    return 0;
+}
+
+————————————————-
+
+EXERCÍCIO 2
+#include <stdio.h>
+#include <stdlib.h>
+
+// documento
+struct Documento {
+    int id;
+    int paginas;
+    int prioridade;
+};
+
+// nó da fila
+struct No {
+    struct Documento doc;
+    struct No *prox;
+};
+
+// fila com prioridade
+struct Fila {
+    struct No *inicio;
+};
+
+// insere ordenado por prioridade
+void enqueue(struct Fila *f, struct Documento d) {
+    struct No *novo = malloc(sizeof(struct No));
+    novo->doc = d;
+    novo->prox = NULL;
+
+    // fila vazia ou maior prioridade
+    if (f->inicio == NULL || d.prioridade < f->inicio->doc.prioridade) {
+        novo->prox = f->inicio;
+        f->inicio = novo;
+        return;
+    }
+
+    struct No *atual = f->inicio;
+
+    // mantém ordem de chegada em empate
+    while (atual->prox != NULL &&
+           atual->prox->doc.prioridade <= d.prioridade) {
+        atual = atual->prox;
+    }
+
+    novo->prox = atual->prox;
+    atual->prox = novo;
+}
+
+// remove da fila
+struct Documento dequeue(struct Fila *f) {
+    struct Documento d = {0,0,0};
+
+    if (f->inicio == NULL) return d;
+
+    struct No *temp = f->inicio;
+    d = temp->doc;
+
+    f->inicio = temp->prox;
+    free(temp);
+
+    return d;
+}
+
+// verifica vazia
+int isEmpty(struct Fila *f) {
+    return f->inicio == NULL;
+}
+
+int main() {
+    struct Fila fila;
+    fila.inicio = NULL;
+
+    int n;
+    scanf("%d", &n);
+
+    // leitura dos documentos
+    for (int i = 0; i < n; i++) {
+        struct Documento d;
+        scanf("%d %d %d", &d.id, &d.paginas, &d.prioridade);
+        enqueue(&fila, d);
+    }
+
+    // impressão
+    while (!isEmpty(&fila)) {
+        struct Documento d = dequeue(&fila);
+        printf("Doc %d - %d paginas - prioridade %d\n",
+               d.id, d.paginas, d.prioridade);
+    }
+
+    return 0;
+}
