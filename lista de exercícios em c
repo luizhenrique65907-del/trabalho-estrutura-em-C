@@ -1,0 +1,236 @@
+— 1 - LISTA DE EXERCÍCIOS DO 1 AO 10 
+
+1-
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+void ex1() {
+    char p1[20], p2[20], p3[20];
+
+    printf("Digite tres palavras: ");
+    scanf("%19s %19s %19s", p1, p2, p3);
+
+    printf("Ordem inversa: %s %s %s\n", p3, p2, p1);
+}
+
+2 - 
+void ex2() {
+    int v[5];
+
+    printf("Digite 5 numeros:\n");
+    for (int i = 0; i < 5; i++) {
+        scanf("%d", &v[i]);
+    }
+
+    printf("Ordem inversa:\n");
+    for (int i = 4; i >= 0; i--) {
+        printf("%d ", v[i]);
+    }
+
+    printf("\n");
+}
+
+3-
+void ex3() {
+    int m[3][3];
+
+    for (int i = 0; i < 3; i++)
+        for (int j = 0; j < 3; j++)
+            scanf("%d", &m[i][j]);
+
+    printf("Resultado:\n");
+
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 3; j++)
+            printf("%d ", m[i][j] * 5);
+        printf("\n");
+    }
+}
+
+4-
+void ex4() {
+    int m[3][3], identidade[3][3], r[3][3];
+
+    for(int i=0;i<3;i++)
+        for(int j=0;j<3;j++)
+            scanf("%d", &m[i][j]);
+
+    for(int i=0;i<3;i++)
+        for(int j=0;j<3;j++)
+            identidade[i][j] = (i==j)?1:0;
+
+    printf("Matriz identidade:\n");
+    for(int i=0;i<3;i++){
+        for(int j=0;j<3;j++)
+            printf("%d ", identidade[i][j]);
+        printf("\n");
+    }
+
+    for(int i=0;i<3;i++){
+        for(int j=0;j<3;j++){
+            r[i][j]=0;
+            for(int k=0;k<3;k++)
+                r[i][j]+=m[i][k]*identidade[k][j];
+        }
+    }
+
+    printf("Resultado:\n");
+    for(int i=0;i<3;i++){
+        for(int j=0;j<3;j++)
+            printf("%d ", r[i][j]);
+        printf("\n");
+    }
+}
+
+5-
+void ex5() {
+    int v[3], m[3][3], r[3];
+
+    for (int i = 0; i < 3; i++)
+        scanf("%d", &v[i]);
+
+    for (int i = 0; i < 3; i++)
+        for (int j = 0; j < 3; j++)
+            scanf("%d", &m[i][j]);
+
+    for (int j = 0; j < 3; j++) {
+        r[j] = 0;
+        for (int i = 0; i < 3; i++)
+            r[j] += v[i] * m[i][j];
+    }
+
+    printf("Resultado:\n");
+    for (int i = 0; i < 3; i++)
+        printf("%d ", r[i]);
+
+    printf("\n");
+}
+
+6-
+struct Aluno6 {
+    char nome[50];
+    int matricula;
+    float media;
+};
+
+void ex6() {
+    struct Aluno6 alunos[10], aprovados[10], reprovados[10];
+    int a = 0, r = 0;
+
+    for(int i = 0; i < 10; i++){
+        scanf(" %[^\n]", alunos[i].nome);
+        scanf("%d", &alunos[i].matricula);
+        scanf("%f", &alunos[i].media);
+
+        if(alunos[i].media >= 5)
+            aprovados[a++] = alunos[i];
+        else
+            reprovados[r++] = alunos[i];
+    }
+
+    printf("\nAprovados:\n");
+    for(int i = 0; i < a; i++)
+        printf("%s %d %.2f\n", aprovados[i].nome, aprovados[i].matricula, aprovados[i].media);
+
+    printf("\nReprovados:\n");
+    for(int i = 0; i < r; i++)
+        printf("%s %d %.2f\n", reprovados[i].nome, reprovados[i].matricula, reprovados[i].media);
+}
+
+7-
+struct Livro {
+    char titulo[30];
+    char autor[15];
+    int ano;
+};
+
+void ex7() {
+    struct Livro livros[5];
+    char busca[30];
+
+    for(int i = 0; i < 5; i++){
+        scanf(" %[^\n]", livros[i].titulo);
+        scanf(" %[^\n]", livros[i].autor);
+        scanf("%d", &livros[i].ano);
+    }
+
+    printf("Titulo para buscar: ");
+    scanf(" %[^\n]", busca);
+
+    for(int i = 0; i < 5; i++){
+        if(strcmp(livros[i].titulo, busca) == 0)
+            printf("%s %s %d\n", livros[i].titulo, livros[i].autor, livros[i].ano);
+    }
+}
+
+8-
+void ex8() {
+    int v[5];
+    int *p = v;
+
+    for (int i = 0; i < 5; i++)
+        scanf("%d", p + i);
+
+    for (int i = 0; i < 5; i++)
+        printf("%d ", *(p + i) * 2);
+
+    printf("\n");
+}
+
+9-
+int ordenar(int *a, int *b, int *c){
+    int t;
+
+    if(*a > *b){ t = *a; *a = *b; *b = t; }
+    if(*a > *c){ t = *a; *a = *c; *c = t; }
+    if(*b > *c){ t = *b; *b = *c; *c = t; }
+
+    return (*a == *b && *b == *c);
+}
+
+void ex9() {
+    int a, b, c;
+
+    scanf("%d %d %d", &a, &b, &c);
+
+    int iguais = ordenar(&a, &b, &c);
+
+    printf("%d %d %d\n", a, b, c);
+    printf("Iguais? %d\n", iguais);
+}
+
+10-
+struct Aluno10 {
+    char nome[50];
+    float nota;
+};
+
+struct Aluno10* maiorNota(struct Aluno10 *a, int n){
+    struct Aluno10 *m = a;
+
+    for(int i = 1; i < n; i++){
+        if((a+i)->nota > m->nota)
+            m = a+i;
+    }
+
+    return m;
+}
+
+void ex10() {
+    int n;
+    scanf("%d", &n);
+
+    struct Aluno10 *a = malloc(n * sizeof(struct Aluno10));
+
+    for(int i = 0; i < n; i++){
+        scanf(" %[^\n]", (a+i)->nome);
+        scanf("%f", &(a+i)->nota);
+    }
+
+    struct Aluno10 *top = maiorNota(a, n);
+
+    printf("Maior nota: %s %.2f\n", top->nome, top->nota);
+
+    free(a);
+}
